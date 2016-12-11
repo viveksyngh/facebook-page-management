@@ -1,0 +1,72 @@
+{% csrf_token %}
+<html>
+	<head>
+		<title> Register </title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	</head>
+	<body>
+		<br>
+	    <h3>Register</h3>
+	    <br>
+	    <div class="container">
+			<form class="form-horizontal" onsubmit="register()">
+			  <div class="form-group">
+			    <label for="inputFullName">Full Name</label>
+			    <input type="text" class="form-control col-md-6" id="inputFullName" placeholder="Full Name">
+			  </div>
+			  <div class="form-group">
+			    <label for="inputEmail">Email address</label>
+			    <input type="email" class="form-control col-md-6" id="inputEmail" placeholder="Email">
+			  </div>
+			  <div class="form-group">
+			    <label for="inputMobile">Mobile</label>
+			    <input type="text" class="form-control col-md-6" id="inputMobile" placeholder="Mobile">
+			  </div>
+			  <div class="form-group">
+			    <label for="inputPassword">Password</label>
+			    <input type="password" class="form-control col-md-6" id="inputPassword" placeholder="Password">
+			  </div>
+			  <button type="submit" class="btn btn-primary pull-right">Register</button>
+			</form>
+		</div>
+		<div class="alert" role="alert" id="alert"></div>
+		<script>
+		function register() {
+			// var BASE_URL = "https://c760e5c6.ngrok.io/";
+			var BASE_URL = "http:127.0.0.1:8000/";
+			var data = {
+						"full_name": $('#inputFullName').val(),
+						"password": $('#inputPassword').val(),
+						"email": $("#inputEmail").val(),
+						"mobile": $("#inputMobile").val()
+					};
+			console.log(data);
+			$.ajax({
+            url:  "http://127.0.0.1:8000/page/v1/register/",
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data, textStatus, jqXHR) {
+            	console.log(data);
+            	$('#alert').removeClass('alert-danger');
+            	$('#alert').addClass('alert-success');
+            	$('#alert').text(data.message);
+            	window.location.replace("http://127.0.0.1:8000/login/");
+              },
+              error: function(data, jqXHR, textStatus, errorThrown) {
+              	$('#alert').removeClass('alert-success');
+              	$('#alert').addClass('alert-danger');
+              	$('#alert').text(data.responseText);
+              	console.log(data);
+              	 console.log(textStatus);
+            	}
+        	});
+		};
+
+	    </script>
+	</body>
+
+</html>

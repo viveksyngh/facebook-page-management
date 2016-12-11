@@ -1,0 +1,70 @@
+{% csrf_token %}
+<html>
+	<head>
+		<title> Login </title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	</head>
+	<body>
+		<script>
+			if (sessionStorage.user_id) {
+				window.location.replace("/");
+			}
+		function login() {
+			// var BASE_URL = "https://c760e5c6.ngrok.io/";
+			var BASE_URL = "http://127.0.0.1:8000/";
+			var data = {
+						"password": $('#inputPassword').val(),
+						"email": $("#inputEmail").val()
+					};
+			console.log(data);
+			$.ajax({
+            url:  "http://127.0.0.1:8000/page/v1/login/",
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data, textStatus, jqXHR) {
+            	console.log(data);
+            	sessionStorage.setItem("user_id", data.user_id);
+            	sessionStorage.setItem("user_name", data.user_name);
+            	sessionStorage.setItem("user_email", data.user_email);
+            	sessionStorage.setItem("is_integrated", data.is_integrated);
+            	if(data.is_integrated) {
+            		window.location.replace('/page/v1/listpage/' +  data.user_id)
+            	}
+            	else {
+            		window.location.replace("/");
+            	}
+              },
+              error: function(data, jqXHR, textStatus, errorThrown) {
+              	console.log(data);
+              	 console.log(data.responseText);
+              	 $('#alert').removeClass('alert-success');
+              	 $('#alert').addClass('alert-danger');
+              	 $('#alert').text(data.responseText);
+            	}
+        	});
+		};
+	    </script>
+	    <br>
+	    <h3>Login</h3>
+	    <br>
+	    <div class="container">
+			<form class="form-horizontal" onsubmit="login()">
+			  <div class="form-group">
+			    <label for="inputemail">Email address</label>
+			    <input type="email" class="form-control col-md-6" id="inputEmail" placeholder="Email">
+			  </div>
+			  <div class="form-group">
+			    <label for="inputPassword">Password</label>
+			    <input type="password" class="form-control col-md-6" id="inputPassword" placeholder="Password">
+			  </div>
+			  <button type="submit" class="btn btn-primary pull-right">Submit</button>
+			</form>
+			<div class="alert" role="alert" id="alert"></div>
+		</div>
+	</body>
+
+</html>

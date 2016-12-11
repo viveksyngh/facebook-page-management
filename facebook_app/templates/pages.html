@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pages</title>
+    <meta charset="UTF-8">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+	{% if page %}
+		<h3>Page information</h3>
+		<form class="form-horizontal" onsubmit="updateInfo()">
+			<!-- <div class="row">
+				<div class="col-md-1">Name</div>
+				<div class="col-md-2">Description</div>
+				<div class="col-md-2">About</div>
+				<div class="col-md-1">Category</div>
+				<div class="col-md-2">Address</div>
+				<div class="col-md-1">Phone</div>
+				<div class="col-md-1">Rating</div>
+				<div class="col-md-1">Likes</div>
+				<div class="col-md-1"></div>
+			</div> -->
+			<div class="row">
+			  <div class="form-group">
+			    <label for="name" class="control-label col-sm-2">Name</label>
+			    <div class="col-sm-10">
+			    <!-- <input type="hidden" id="name" value="{{page.name}}"> -->
+			    <!--  <input type="text" class="form-control" id="name" placeholder="Page Name" value="{{page.name}}"> -->
+			    <p class="form-control-static">{{page.name}}</p>
+			    </div>
+			  </div>
+			   <div class="form-group">
+			    <label for="description" class="control-label col-sm-2">Description</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="description" placeholder="Description" value="{{page.description}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="about" class="control-label col-sm-2">About</label>
+			    <div class="col-sm-10">
+			     <input type="text" class="form-control" id="about" placeholder="About" value="{{page.about}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="category" class="control-label col-sm-2">Category</label>
+			    <div class="col-sm-10">
+			     <input type="text" class="form-control" id="category" placeholder="Category" value="{{page.category}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="website" class="control-label col-sm-2">Website</label>
+			    <div class="col-sm-10">
+			     <input type="text" class="form-control" id="website" placeholder="Website" value="{{page.website}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="website" class="control-label col-sm-2">Address</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="contact_address" placeholder="Address" value="{{page.contact_address}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="website" class="control-label col-sm-2">Phone</label>
+			    <div class="col-sm-10">
+			    	<input type="text" class="form-control" id="phone" placeholder="Phone" value="{{page.phone}}">
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="website" class="control-label col-sm-2 disabled">Rating</label>
+			    <div class="col-sm-10">
+			    	<p class="form-control-static">{{page.overall_star_rating}}</p>
+			    	<!-- input type="text" class="form-control-static" id="overall_star_rating" placeholder="Rating" value="{{page.overall_star_rating}}"> -->
+			    </div>
+			   </div>
+			   <div class="form-group">
+			    <label for="website" class="control-label col-sm-2 disabled">Likes</label>
+			    <div class="col-sm-10">
+			    	<p class="form-control-static">{{page.fan_count}}</p>
+			    	<!-- <input type="text" class="form-control-static" id="fan_count" placeholder="Likes" value="{{page.fan_count}}"> -->
+			    </div>
+			    <div class="col-sm-10">
+			    	<!-- <p class="form-control-static">{{page.fan_count}}</p> -->
+			    	<input type="hidden" id="page_id" value="{{page.id}}">
+			    </div>
+			   </div>
+			  <button type="submit" class="btn btn-primary pull-right">Update</button>
+			</tr>
+		</form>
+
+	</div>
+	<div class="alert" role="alert" id="alert"></div>
+	<!-- <div class="alert alert-success" role="alert"></div> -->
+	{% else %}
+		<div class="alert alert-danger" role="alert">You don't have any facebook page.</div>
+	{% endif %}
+	</div>
+<script>
+
+		if (!sessionStorage.user_id) {
+				window.location.replace("/login/");
+			}
+	function updateInfo() {
+		var data = {
+				// "name": $('#name').val(),
+				"description": $('#description').val(),
+				"about": $('#about').val(),
+				"category": $('#category').val(),
+				"website": $('#website').val(),
+				"contact_address": $('#contact_address').val(),
+				"phone": $('#phone').val(),
+				"page_id": $('#page_id').val()				
+
+		};
+		$.ajax({
+            url:  "http://127.0.0.1:8000/page/v1/updatepage/",
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data, textStatus, jqXHR) {
+            	console.log(data);
+            	$('#alert').removeClass('alert-danger');
+            	$('#alert').addClass('alert-success');
+            	$('#alert').text(data.message);
+            	window.location.replace("/page/v1/listpage/" + sessionStorage.user_id);
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+              	$('#alert').removeClass('alert-success');
+              	$('#alert').addClass('alert-danger');
+              	$('#alert').text(textStatus);
+              	 console.log(textStatus);
+            	}
+        	});
+	};
+</script>
+</body>
+</html>
