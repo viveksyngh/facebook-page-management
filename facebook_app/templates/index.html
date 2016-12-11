@@ -99,7 +99,7 @@
           'Thanks for logging in, ' + response.name + '!';
     });
 
-    if (!sessionStorage.is_integrated) {
+    // if (!sessionStorage.is_integrated) {
       FB.api('/me/accounts', function(response) {
         console.log(response);
         console.log('Successful login for: ' + response.name);
@@ -130,11 +130,11 @@
           console.log("You dont have any page on facebook to manage.");
         }
       });
-    }
-    else {
-          console.log("Already integrated with facebook");
-          window.location.replace("page/v1/listpage/" + sessionStorage.user_id);
-        }
+    // }
+    // else {
+    //       console.log("Already integrated with facebook");
+    //       window.location.replace("page/v1/listpage/" + sessionStorage.user_id);
+    //     }
     }
 </script>
 
